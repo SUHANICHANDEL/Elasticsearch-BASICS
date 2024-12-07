@@ -1,0 +1,23 @@
+from elastic_transport import ObjectApiResponse
+from elasticsearch import Elasticsearch
+es = Elasticsearch("http://localhost:9200/", request_timeout=60)
+# Index a simple document
+document = {
+    "name" : "John Smith",
+    "age" : 40,
+    "department" : "IT",
+    "occupation" : "Software Engineer",
+    "branch" : "Noida"
+}
+
+es.index(index="emp", id=1, document=document)
+query = {
+    "query" : {
+        "match" : {
+            "branch" : "Noida"
+        }
+    }
+}
+
+response = es.search(index="emp", body=query)
+print("Search Results :", response)
