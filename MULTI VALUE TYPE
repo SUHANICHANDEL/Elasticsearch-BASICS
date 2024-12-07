@@ -1,0 +1,28 @@
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
+es = Elasticsearch("http://localhost:9200/")
+documents = [
+    {"_index":"my_index", "_id":1, "_source" : {"name" : "John", "age" : 30, "dept" : "IT", "occupation" : "Manager"}},
+    {"_index":"my_index", "_id":2, "_source" : {"name" : "Max", "age" : 35, "dept" : "Sales", "occupation" : "Head"}},
+    {"_index":"my_index", "_id":3, "_source" : {"name" : "Sam", "age" : 28, "dept" : "IT", "occupation" : "SE"}},
+    {"_index":"my_index", "_id":4, "_source" : {"name" : "Jack", "age" : 34, "dept" : "HR", "occupation" : "Manager"}}
+]
+
+bulk(es, documents)
+
+#match query
+
+query = {
+    "query" : {
+        "match":{
+            "dept":"IT"
+        }
+    }
+}
+
+resp = es.search(index="my_index", body=query)
+
+# print("results: ",resp["hits"]["hits"])
+
+for hit in resp["hits"]["hits"]:
+    print(hit["_source"])
